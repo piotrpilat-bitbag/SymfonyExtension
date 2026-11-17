@@ -7,6 +7,7 @@ namespace FriendsOfBehat\SymfonyExtension\Bundle\DependencyInjection;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
+use FriendsOfBehat\SymfonyExtension\Bundle\BehatContainerAccessor;
 use FriendsOfBehat\SymfonyExtension\Mink\MinkParameters;
 use FriendsOfBehat\SymfonyExtension\ServiceContainer\SymfonyExtension;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -49,7 +50,7 @@ final class FriendsOfBehatSymfonyExtensionExtension extends Extension implements
     {
         $behatServiceContainerDefinition = new Definition(ContainerInterface::class);
         $behatServiceContainerDefinition->setPublic(true);
-        $behatServiceContainerDefinition->setSynthetic(true);
+        $behatServiceContainerDefinition->setFactory([BehatContainerAccessor::class, 'get']);
 
         $container->setDefinition('behat.service_container', $behatServiceContainerDefinition);
     }
