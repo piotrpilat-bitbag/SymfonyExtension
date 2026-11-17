@@ -6,6 +6,7 @@ namespace FriendsOfBehat\SymfonyExtension\Listener;
 
 use Behat\Behat\EventDispatcher\Event\ExampleTested;
 use Behat\Behat\EventDispatcher\Event\ScenarioTested;
+use FriendsOfBehat\SymfonyExtension\Bundle\BehatContainerAccessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -41,8 +42,7 @@ final class KernelOrchestrator implements EventSubscriberInterface
 
     public function setUp(): void
     {
-        /** @psalm-suppress InvalidArgument Psalm complains that ContainerInterface does not match object|null */
-        $this->symfonyKernel->getContainer()->set('behat.service_container', $this->behatContainer);
+        BehatContainerAccessor::set($this->behatContainer);
     }
 
     public function tearDown(): void
@@ -62,7 +62,7 @@ final class KernelOrchestrator implements EventSubscriberInterface
          * make sure both kernels are booted immediately after being created, and we also initiate the
          * re-boot() here right away.
          */
-        $this->symfonyKernel->getContainer()->set('behat.service_container', null);
+        BehatContainerAccessor::set(null);
         $this->symfonyKernel->shutdown();
         $this->symfonyKernel->boot();
 
